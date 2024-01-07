@@ -160,7 +160,7 @@ LABEL2ID = {
 
 class PipelineLoader:
     @classmethod
-    def INTPUT_TYPES(cls):
+    def INPUT_TYPES(cls):
         return {
             "required": {}
         }
