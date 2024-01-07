@@ -180,7 +180,7 @@ class SegToMask:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "classes": ("STRING",), 
+                "classes": ("STRING", {"multiline": True}), 
                 "image": ("IMAGE",),
                 "model": ("MODEL",), 
                 "processor": ("MODEL",)
