@@ -213,7 +213,7 @@ class SegToMask:
             color_seg[seg == each_id, :] = np.array([255, 255, 255])
         color_seg = color_seg.astype(np.uint8)
         control_image = Image.fromarray(color_seg)
-        return (control_image)
+        return (torch.tensor(np.asarray(control_image) / 255))
 
 class LoadImageSegMask:
     @classmethod
