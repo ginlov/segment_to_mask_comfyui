@@ -222,9 +222,7 @@ class SegToMask:
         for mask in masks:
             original_mask = original_mask & ~mask
         # color_seg[original_mask, :] = temp2[original_mask, :]
-        print(total_mask)
-        raise(Exception())
-        total_mask[original_mask] = 0
+        total_mask[original_mask] = 255
         total_mask = torch.tensor(total_mask, dtype=torch.float32) / 255.0
         total_mask = 1. - total_mask
 
