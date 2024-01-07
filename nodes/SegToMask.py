@@ -209,8 +209,8 @@ class SegToMask:
         color_seg = np.ones((seg.shape[0], seg.shape[1], 4), dtype=np.uint8) * 255
         list_of_ids = [LABEL2ID[label] for label in classes]
         masks = []
-        temp1 = temp.convert("RGBA")
-        temp2 = temp.convert("RGBA")
+        temp1 = np.array(img.convert('RGBA'))
+        temp2 = temp1
         temp2[:, :, -1] = np.zeros((temp.shape[0], temp.shape[1]), dtype=np.uint8)
         for each_id in list_of_ids:
             mask = seg == each_id
