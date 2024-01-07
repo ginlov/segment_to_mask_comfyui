@@ -197,6 +197,7 @@ class SegToMask:
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
         # img = Image.fromarray(image).convert("RGB")
+        print(type(image))
         img = image
 
         pixel_values = processor(img, return_tensors="pt").pixel_values
