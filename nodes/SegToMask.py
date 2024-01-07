@@ -272,6 +272,6 @@ class SegToMaskControlnet:
             original_mask = original_mask & ~mask
 
         input_image = temp_first / 255.0
-        input_image[original_mask, : ] = -1.0
+        input_image[original_mask, : ] = np.array([-1.0, -1.0, -1.0])
         input_image = torch.from_numpy(input_image).unsqueeze(0)
         return (input_image) 
