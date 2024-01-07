@@ -1,5 +1,7 @@
 import torch
 import numpy as np
+import ComfuUI.folder_paths as folder_paths
+import os
 
 from comfy.model_management import InterruptProcessingException, get_torch_device
 from PIL import Image
@@ -196,10 +198,10 @@ class SegToMask:
     def segment2mask(self, classes, image, model, processor):
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
-        img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
+        # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
         print(type(image))
         print(image.shape)
-        # img = image
+        img = image
 
         pixel_values = processor(img, return_tensors="pt").pixel_values
         with torch.no_grad():
@@ -214,3 +216,23 @@ class SegToMask:
         control_image = Image.fromarray(color_seg)
         return (control_image)
 
+class LoadImageSegMask:
+    @classmethod
+    def INPUT_TYPES(s):
+        input_dir = folder_paths.get_input_directory()
+        files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
+        return {"required":
+                    {"image": (sorted(files), {"image_upload": True})},
+                }
+
+    CATEGORY = "giangvlcs/load_image"
+
+    RETURN_TYPES = ("IMAGE", "MASK")
+    FUNCTION = "load_image"
+    def load_image(self, image):
+        image_path = folder_paths.get_annotated_filepath(image)
+        img = Image.open(image_path)
+        output_images = img.convert("RGB")
+        output_masks = []
+
+        return (output_images, output_masks)
