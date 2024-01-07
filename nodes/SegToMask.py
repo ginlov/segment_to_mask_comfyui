@@ -189,8 +189,8 @@ class SegToMask:
         
     CATEGORY = "giangvlcs/segtomask"
     TITLE = "Segmentation to Mask"
-    RETURN_TYPES = ("IMAGE",)
-    RUTURN_NAMES = ("masks")
+    RETURN_TYPES = ("IMAGE", "MASK")
+    RUTURN_NAMES = ("image", "mask")
     FUNCTION = "segment2mask"
 
     def segment2mask(self, classes, image, model, processor):
@@ -212,15 +212,19 @@ class SegToMask:
         temp1 = np.array(img.convert('RGBA'))
         temp2 = temp1
         temp2[:, :, -1] = np.zeros((temp.shape[0], temp.shape[1]), dtype=np.uint8)
+        total_mask = temp1[:, :, -1]
         for each_id in list_of_ids:
             mask = seg == each_id
             masks.append(mask)
-            color_seg[mask, :] = temp1[mask, :]
+            # color_seg[mask, :] = temp1[mask, :]
 
         original_mask = True
         for mask in masks:
             original_mask = original_mask & ~mask
-        color_seg[original_mask, :] = temp2[original_mask, :]
+        # color_seg[original_mask, :] = temp2[original_mask, :]
+        total_mask[original_mask] = 0
+        total_mask = torch.tensor(total_mask, dtype=torch.float32) / 255.0
+        total_mask = 1. - total_mask
 
-        color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
-        return ([color_seg])
+        # color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
+        return ([image], [total_mask])
