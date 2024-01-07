@@ -217,12 +217,13 @@ class SegToMask:
             mask = seg == each_id
             masks.append(mask)
             # color_seg[mask, :] = temp1[mask, :]
+            total_mask[mask] = 255
 
         original_mask = True
         for mask in masks:
             original_mask = original_mask & ~mask
         # color_seg[original_mask, :] = temp2[original_mask, :]
-        total_mask[original_mask] = 255
+        # total_mask[original_mask] = 255
         total_mask = torch.tensor(total_mask, dtype=torch.float32) / 255.0
         total_mask = 1. - total_mask
 
