@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-import ComfuUI.folder_paths as folder_paths
+import folder_paths
 import os
 
 from comfy.model_management import InterruptProcessingException, get_torch_device
