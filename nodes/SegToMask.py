@@ -197,7 +197,7 @@ class SegToMask:
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
         temp = image[0] * 255.0
-        img = Image.fromarray(np.clip(temp.detach().cpy().numpy(), 0, 255).astype(np.uint8)).convert("RGB")
+        img = Image.fromarray(np.clip(temp.detach().cpu().numpy(), 0, 255).astype(np.uint8)).convert("RGB")
         # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
         img = image
 
