@@ -205,9 +205,9 @@ class SegToMask:
             outputs = model(pixel_values)
 
         seg = processor.post_process_semantic_segmentation(outputs, target_sizes=[img.size[::-1]])[0]
-        color_seg = np.zeros((seg.shape[0], seg.shape[1], 3), dtype=np.uint8)
+        color_seg = np.ones((seg.shape[0], seg.shape[1], 3), dtype=np.uint8) * 255
         list_of_ids = [LABEL2ID[label] for label in classes]
         for each_id in list_of_ids:
-            color_seg[seg == each_id, :] = np.array([255, 255, 255])
+            color_seg[seg == each_id, :] = np.array([0, 0, 0])
         color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
         return ([color_seg])
