@@ -196,9 +196,10 @@ class SegToMask:
     def segment2mask(self, classes, image, model, processor):
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
-        # img = Image.fromarray(image).convert("RGB")
+        img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
         print(type(image))
-        img = image
+        print(image.shape)
+        # img = image
 
         pixel_values = processor(img, return_tensors="pt").pixel_values
         with torch.no_grad():
