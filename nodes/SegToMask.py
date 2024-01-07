@@ -227,4 +227,4 @@ class SegToMask:
         total_mask = 1. - total_mask
 
         # color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
-        return (image, [total_mask])
+        return (image, total_mask.unsqueeze(0))
