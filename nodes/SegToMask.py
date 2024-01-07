@@ -229,3 +229,48 @@ class SegToMask:
 
         # color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
         return (image, total_mask.unsqueeze(0))
+
+class SegToMaskControlnet:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "classes": ("STRING", {"multiline": True}), 
+                "image": ("IMAGE",),
+                "model": ("MODEL",), 
+                "processor": ("MODEL",)
+            },
+        }
+        
+    CATEGORY = "giangvlcs/segtomaskcontrolnet"
+    TITLE = "Segmentation to Mask with Controlnet"
+    RETURN_TYPES = ("IMAGE") 
+    RUTURN_NAMES = ("image")
+    FUNCTION = "segment2mask"
+
+    def segment2mask(self, classes, image, model, processor):
+        classes = classes.split(",")
+        classes = [each.strip() for each in classes]
+        temp_first = image[0].cpu().numpy() * 255.0
+        temp = np.clip(temp_first, 0, 255).astype(np.uint8)
+        img = Image.fromarray(temp).convert("RGB")
+        # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
+
+        pixel_values = processor(img, return_tensors="pt").pixel_values
+        with torch.no_grad():
+            outputs = model(pixel_values)
+
+        seg = processor.post_process_semantic_segmentation(outputs, target_sizes=[img.size[::-1]])[0]
+        list_of_ids = [LABEL2ID[label] for label in classes]
+        masks = []
+        for each_id in list_of_ids:
+            mask = seg == each_id
+            masks.append(mask)
+
+        original_mask = True
+        for mask in masks:
+            original_mask = original_mask & ~mask
+
+        input_image = temp_first / 255.0
+        input_image[original_mask, : ] = -1.0
+        return ([input_image]) 
