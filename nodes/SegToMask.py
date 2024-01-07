@@ -212,12 +212,12 @@ class SegToMask:
         for each_id in list_of_ids:
             mask = seg == each_id
             masks.append(mask)
-            color_seg[mask, :] = np.array([0, 0, 0])
+            color_seg[mask, :] = temp[mask, :]
 
         original_mask = True
         for mask in masks:
             original_mask = original_mask & ~mask
-        color_seg[original_mask, :] = temp[original_mask, :]
+        color_seg[original_mask, :] = np.array([255, 255, 255])
 
         color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
         return ([color_seg])
