@@ -198,7 +198,7 @@ class SegToMask:
         classes = [each.strip() for each in classes]
         temp = image[0].cpu().numpy() * 255.0
         temp = np.clip(temp, 0, 255).astype(np.uint8)
-        img = Image.fromarray(temp)
+        img = Image.fromarray(temp).convert("RGB")
         # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
 
         pixel_values = processor(img, return_tensors="pt").pixel_values
@@ -206,18 +206,21 @@ class SegToMask:
             outputs = model(pixel_values)
 
         seg = processor.post_process_semantic_segmentation(outputs, target_sizes=[img.size[::-1]])[0]
-        color_seg = np.ones((seg.shape[0], seg.shape[1], 3), dtype=np.uint8) * 255
+        color_seg = np.ones((seg.shape[0], seg.shape[1], 4), dtype=np.uint8) * 255
         list_of_ids = [LABEL2ID[label] for label in classes]
         masks = []
+        temp1 = temp.convert("RGBA")
+        temp2 = temp.convert("RGBA")
+        temp2[:, :, -1] = np.zeros((temp.shape[0], temp.shape[1]), dtype=np.uint8)
         for each_id in list_of_ids:
             mask = seg == each_id
             masks.append(mask)
-            color_seg[mask, :] = temp[mask, :]
+            color_seg[mask, :] = temp1[mask, :]
 
         original_mask = True
         for mask in masks:
             original_mask = original_mask & ~mask
-        color_seg[original_mask, :] = np.array([255, 255, 255])
+        color_seg[original_mask, :] = temp2[original_mask, :]
 
         color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
         return ([color_seg])
