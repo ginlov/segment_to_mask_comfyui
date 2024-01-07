@@ -273,4 +273,5 @@ class SegToMaskControlnet:
 
         input_image = temp_first / 255.0
         input_image[original_mask, : ] = -1.0
-        return ([input_image]) 
+        input_image.unsqueeze(0)
+        return (input_image) 
