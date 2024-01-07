@@ -211,4 +211,4 @@ class SegToMask:
         for each_id in list_of_ids:
             color_seg[seg == each_id, :] = np.array([255, 255, 255])
         color_seg = torch.tensor(color_seg.astype(np.float32) / 255.0)
-        return (color_seg[None,])
+        return ([color_seg])
