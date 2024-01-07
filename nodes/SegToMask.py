@@ -168,7 +168,7 @@ class PipelineLoader:
     CATEGORY = "giangvlcs/PipelineLoader"
     FUNCTION = "load"
     RETURN_NAMES = ("MODEL", "PROCESSOR")
-    RETURN_NAMES = ("MODEL", "MODEL")
+    RETURN_TYPES = ("MODEL", "MODEL")
 
     def load(self):
         image_processor = AutoImageProcessor.from_pretrained("openmmlab/upernet-convnext-small")
