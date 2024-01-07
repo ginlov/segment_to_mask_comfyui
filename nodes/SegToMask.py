@@ -244,8 +244,8 @@ class SegToMaskControlnet:
         
     CATEGORY = "giangvlcs/segtomaskcontrolnet"
     TITLE = "Segmentation to Mask with Controlnet"
-    RETURN_TYPES = ("IMAGE") 
-    RUTURN_NAMES = ("image")
+    RETURN_TYPES = ("IMAGE",) 
+    RUTURN_NAMES = ("image",)
     FUNCTION = "segment2mask"
 
     def segment2mask(self, classes, image, model, processor):
