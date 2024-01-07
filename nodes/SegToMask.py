@@ -196,8 +196,9 @@ class SegToMask:
     def segment2mask(self, classes, image, model, processor):
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
-        temp = image[0] * 255.0
-        img = Image.fromarray(np.clip(temp.detach().cpu().numpy(), 0, 255).astype(np.uint8)).convert("RGB")
+        temp = image[0].cpu().numpy() * 255.0
+        print(temp.shape)
+        img = Image.fromarray(np.clip(temp, 0, 255).astype(np.uint8))
         # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
 
         pixel_values = processor(img, return_tensors="pt").pixel_values
