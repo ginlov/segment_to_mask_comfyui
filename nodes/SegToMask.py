@@ -197,7 +197,6 @@ class SegToMask:
         classes = classes.split(",")
         classes = [each.strip() for each in classes]
         temp = image[0].cpu().numpy() * 255.0
-        print(temp.shape)
         img = Image.fromarray(np.clip(temp, 0, 255).astype(np.uint8))
         # img = Image.fromarray(image.detach().cpu().numpy()).convert("RGB")
 
@@ -211,5 +210,4 @@ class SegToMask:
         for each_id in list_of_ids:
             color_seg[seg == each_id, :] = np.array([255, 255, 255])
         color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
-        print(color_seg.shape)
-        return (color_seg)
+        return ([color_seg])
