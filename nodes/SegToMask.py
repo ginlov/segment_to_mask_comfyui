@@ -210,6 +210,7 @@ class SegToMask:
         list_of_ids = [LABEL2ID[label] for label in classes]
         for each_id in list_of_ids:
             color_seg[seg == each_id, :] = np.array([255, 255, 255])
-        color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)
+        color_seg = torch.from_numpy(color_seg.astype(np.float32) / 255.0)[None, ]
         print(color_seg.shape)
-        return (color_seg[None, ])
+        raise(Exception())
+        return (color_seg)
